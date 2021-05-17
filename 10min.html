@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+    <head>
+        <title>10 Minute Sessions</title>
+        <meta charset="utf-8">
+        <script lang="text/javascript">
+			const second = 1000;
+			const minute = 60 * second;
+
+			var secondTimer;
+			var title;
+			var comment;
+			var startButton;
+			
+			function startSecondTimer() {
+				var count = 59;
+				secondTimer = setInterval(()=> {
+					comment.innerText = `${count--} seconds left`;
+				}, second);
+			}
+			function stopSecondTimer() {
+				clearInterval(secondTimer);
+			}
+
+			function startSession() {
+				title = document.getElementById("title");
+				comment = document.getElementById("comment");
+				startButton = document.getElementById("start");
+				startButton.innerText ="GO!";
+				startButton.disabled = true;
+				countDown = 9;
+				var initialisationTimer = setInterval(() => {
+					title.innerText = `Count down ${countDown}`;
+					if (countDown-- === 0) {
+						title.innerText = `Start`;
+						clearInterval(initialisationTimer);
+						oneMinute(10);
+					}
+				}, second);
+			}
+
+			function oneMinute(count) {
+				beeper2.play();
+				if (count > 0) {
+					title.innerText = `Session ${count}`;
+					startSecondTimer();
+					setTimeout(() => {
+						beeper2.pause();
+						stopSecondTimer();                     
+						oneMinute(--count);
+					}, minute);
+				} else {
+					title.innerText = "Finished";
+					var count = 10
+					var finito = setInterval(()=> {
+						count--;
+						beeper2.pause();
+						beeper2.play();
+						if (count <= 0) {
+							clearInterval(finito);
+						}
+					}, second);
+				}
+			}
+
+        </script>
+        <style>
+			body {font-family: Arial;}
+			button { border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; background-color: #4CAF50;}
+            .center { margin: auto; width: 60%; border: 3px solid #4CAF50; padding: 10px; margin-top: 5em; text-align: center; }
+        </style>
+    </head>
+    <body>
+		<audio id="beeper2" src="vikingwarrior/beep.mp3" type="audio/mpeg"></audio>
+        <div class="center">
+		<h1>10 Minute sessions</h1>
+		<p>
+            <h1 id="title">Click the button below to get going...</h1>
+			<h2 id="comment">&nbsp;</h2>
+			<button id="start" onclick="startSession()">Click to Start</button>
+			</p>
+        </div>
+    </body>
+</html>

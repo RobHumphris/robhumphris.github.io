@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+    <head>
+        <title>15:15 MVO2 Protocol</title>
+        <meta charset="utf-8">
+        <script lang="text/javascript">
+			const second = 1000;
+			const interval = 15 * second;
+			const repInterval = interval/7;
+
+			var repTimer;
+			var repCount = 0;
+			var title;
+			var comment;
+			var startButton;
+			
+			function startRepTimer() {
+				repTimer = setInterval(()=> {
+					beeper2.pause();
+					comment.innerText = "Next Rep!"
+                    beeper2.play();
+				}, repInterval);
+			}
+			
+			function stopRepTimer() {
+				clearInterval(repTimer);
+			}
+
+			function startSecondTimer() {
+				var count = 14;
+				secondTimer = setInterval(()=> {
+					comment.innerText = `${count--} seconds left`;
+				}, second);
+			}
+			function stopSecondTimer() {
+				clearInterval(secondTimer);
+			}
+
+			function startSession() {
+				title = document.getElementById("title");
+				comment = document.getElementById("comment");
+				startButton = document.getElementById("start");
+				startButton.innerText ="GO!";
+				startButton.disabled = true;
+
+				countDown = 9;
+				var initialisationTimer = setInterval(() => {
+					title.innerText = `Count down ${countDown}`;
+					if (countDown-- === 0) {
+						title.innerText = `Start`;
+						clearInterval(initialisationTimer);
+						exercise();
+					}
+				}, second);
+			}
+
+			function exercise() {
+				repCount++;
+				title.innerText = `Exercise Interval Set ${repCount}`;
+				startRepTimer();
+				startSecondTimer();
+				setTimeout(() => {
+					stopRepTimer();
+					stopSecondTimer();
+					rest();
+				}, interval);
+			}
+
+			function rest() {
+				title.innerText = `Rest Interval Set ${repCount}`;
+				startSecondTimer();
+				setTimeout(() => {
+					stopSecondTimer();
+					exercise();
+				}, interval);
+			}
+
+        </script>
+        <style>
+			body {font-family: Arial;}
+			button { border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; background-color: #4CAF50;}
+            .center { margin: auto; width: 60%; border: 3px solid #4CAF50; padding: 10px; margin-top: 5em; text-align: center; }
+        </style>
+    </head>
+    <body>
+        <audio id="beeper" src="beep.mp3" type="audio/mpeg"></audio>
+		<audio id="beeper2" src="beep.mp3" type="audio/mpeg"></audio>
+        <div class="center">
+		<h1>15:15 MVO2 Protocol</h1>
+		<p>
+            <h1 id="title">Click the button below to get going...</h1>
+			<h2 id="comment">&nbsp;</h2>
+			<button id="start" onclick="startSession()">Click to Start</button>
+			</p>
+        </div>
+    </body>
+</html>
